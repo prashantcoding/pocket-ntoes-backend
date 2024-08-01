@@ -4,15 +4,28 @@ const Note = require('../models/Notes');
 
 // Create a new group
 const createGroup = async (req, res) => {
-
-  const newGroup = new Group(req.body);
-  try {
-    const savedGroup = await newGroup.save();
-    res.status(201).json(savedGroup);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+    const { name, color } = req.body;
+  
+    try {
+      // Check if a group with the same name already exists
+      const existingGroup = await Group.findOne({ name });
+      if (existingGroup) {
+        // If a group with the same name exists, return a conflict status
+        return res.status(409).json({ message: 'Group with this name already exists.' });
+      }
+  
+      // Create a new group if it doesn't already exist
+      const newGroup = new Group({ name, color });
+      const savedGroup = await newGroup.save();
+  
+      // Respond with the created group
+      res.status(201).json(savedGroup);
+    } catch (error) {
+      // Handle errors, e.g., validation errors
+      res.status(400).json({ message: error.message });
+    }
+  };
+  
 const getAllGroups = async (req, res) => {
     try {
       // Retrieve groups with _id, name, and color fields

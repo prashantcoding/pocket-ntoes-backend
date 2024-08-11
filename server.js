@@ -1,26 +1,25 @@
 const express = require('express');
 const connectDB = require('./config/database');
 const groupRoutes = require('./routes/groupRoutes');
-const cors = require('cors');
-const path = require('path');
+const cors =require("cors")
 const app = express();
 const port = 3000;
-
-require('dotenv').config();
-
+require('dotenv').config()
+// Connect to MongoDB
 connectDB();
+app.use(cors())
+// Middleware to parse JSON
+app.use(express.json())
 
-app.use(cors());
-app.use(express.json());
-
-app.use(express.static(path.join(__dirname, 'dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
-
+// Define routes
 app.use('/api', groupRoutes);
 
+// Root route
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
 
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

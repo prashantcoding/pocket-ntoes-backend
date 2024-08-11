@@ -2,19 +2,19 @@ const Group = require('../models/Groups');
 const Note = require('../models/Notes');
 
 
-// Create a new group
+
 const createGroup = async (req, res) => {
     const { name, color } = req.body;
   
     try {
-      // Check if a group with the same name already exists
+      
       const existingGroup = await Group.findOne({ name });
       if (existingGroup) {
-        // If a group with the same name exists, return a conflict status
+        
         return res.status(409).json({ message: 'Group with this name already exists.' });
       }
   
-      // Create a new group if it doesn't already exist
+     
       const newGroup = new Group({ name, color });
       const savedGroup = await newGroup.save();
   
